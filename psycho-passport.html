@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Психопаспорт</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0a0a0b;
+  --surface:#111113;
+  --surface2:#18181c;
+  --border:#252528;
+  --border2:#2e2e33;
+  --text:#d4d4d8;
+  --text2:#71717a;
+  --text3:#52525b;
+  --green:#22c55e;
+  --red:#ef4444;
+  --yellow:#eab308;
+  --blue:#3b82f6;
+  --orange:#f97316;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-weight:300;
+  min-height:100vh;
+  font-size:15px;
+  line-height:1.6;
+}
+
+/* SCANLINE EFFECT */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:9999;
+}
+
+.wrap{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+
+/* INTRO */
+.intro{
+  border:1px solid var(--border2);
+  padding:40px;
+  margin-bottom:40px;
+  position:relative;
+  animation:fadeIn 0.6s ease both;
+}
+.intro::before{
+  content:'ПСИХОПАСПОРТ v2.1';
+  position:absolute;
+  top:-1px;left:0;right:0;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.3em;
+  color:var(--red);
+  background:var(--bg);
+  padding:0 12px;
+  width:fit-content;
+  margin:0 auto;
+}
+
+.terminal-line{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text2);
+  margin-bottom:6px;
+}
+.terminal-line .cursor{
+  display:inline-block;
+  width:8px;height:14px;
+  background:var(--green);
+  vertical-align:middle;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.intro h1{
+  font-family:var(--mono);
+  font-size:clamp(22px,4vw,32px);
+  font-weight:500;
+  color:#fff;
+  margin:20px 0 12px;
+  letter-spacing:-0.02em;
+}
+.intro p{
+  color:var(--text2);
+  font-size:14px;
+  line-height:1.8;
+  max-width:600px;
+}
+.warning-box{
+  margin-top:24px;
+  border:1px solid rgba(239,68,68,0.3);
+  background:rgba(239,68,68,0.05);
+  padding:16px 20px;
+  font-family:var(--mono);
+  font-size:11px;
+  color:#f87171;
+  line-height:1.7;
+}
+.warning-box span{color:var(--red);font-weight:500}
+
+/* PROGRESS */
+.progress-shell{
+  margin-bottom:32px;
+  animation:fadeIn 0.6s 0.1s ease both;
+}
+.prog-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+.prog-label{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.prog-pct{font-family:var(--mono);font-size:11px;color:var(--green)}
+.prog-track{
+  height:2px;
+  background:var(--border2);
+  position:relative;
+  overflow:hidden;
+}
+.prog-fill{
+  height:100%;
+  background:var(--green);
+  transition:width 0.5s cubic-bezier(0.4,0,0.2,1);
+  position:relative;
+}
+.prog-fill::after{
+  content:'';
+  position:absolute;
+  right:0;top:-2px;
+  width:5px;height:6px;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+}
+.section-name{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.15em;
+  color:var(--text3);
+  margin-top:6px;
+}
+
+/* QUESTION */
+.q-block{
+  border:1px solid var(--border2);
+  margin-bottom:16px;
+  animation:slideIn 0.35s ease both;
+  background:var(--surface);
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.q-head{
+  padding:20px 24px 16px;
+  border-bottom:1px solid var(--border);
+}
+.q-meta{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text3);
+  margin-bottom:8px;
+  display:flex;
+  gap:16px;
+}
+.q-meta .tag{
+  color:var(--text2);
+  border:1px solid var(--border2);
+  padding:2px 8px;
+  font-size:9px;
+  letter-spacing:0.1em;
+}
+.q-text{
+  font-size:15px;
+  color:var(--text);
+  line-height:1.65;
+  font-weight:300;
+}
+
+.opts{padding:16px 24px 20px;display:flex;flex-direction:column;gap:8px}
+
+.opt{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:14px 18px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  cursor:pointer;
+  transition:border-color 0.15s,background 0.15s;
+  text-align:left;
+  width:100%;
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:13px;
+  font-weight:300;
+  line-height:1.6;
+}
+.opt:hover{border-color:var(--border2);background:var(--surface2)}
+.opt.selected{border-color:var(--green);background:rgba(34,197,94,0.05)}
+.opt-dot{
+  flex-shrink:0;
+  width:6px;height:6px;
+  border:1px solid var(--text3);
+  border-radius:50%;
+  margin-top:6px;
+  transition:all 0.15s;
+}
+.opt.selected .opt-dot{
+  background:var(--green);
+  border-color:var(--green);
+  box-shadow:0 0 6px var(--green);
+}
+
+/* SCALE */
+.scale-block{padding:16px 24px 20px}
+.scale-labels{
+  display:flex;
+  justify-content:space-between;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text3);
+  margin-bottom:10px;
+}
+.scale-opts{
+  display:flex;
+  gap:8px;
+}
+.scale-btn{
+  flex:1;
+  padding:12px 4px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  cursor:pointer;
+  transition:all 0.15s;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text2);
+  display:flex;align-items:center;justify-content:center;
+}
+.scale-btn:hover{border-color:var(--border2);background:var(--surface2);color:var(--text)}
+.scale-btn.selected{
+  border-color:var(--green);
+  background:rgba(34,197,94,0.08);
+  color:var(--green);
+}
+
+/* NAV */
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:24px;
+  animation:fadeIn 0.5s 0.1s both;
+}
+.nav-info{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.btn{
+  padding:12px 32px;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.15em;
+  cursor:pointer;
+  transition:all 0.2s;
+  border:none;
+}
+.btn-main{background:var(--green);color:#000;font-weight:500}
+.btn-main:hover{background:#16a34a;box-shadow:0 0 20px rgba(34,197,94,0.3)}
+.btn-main:disabled{background:var(--border2);color:var(--text3);cursor:not-allowed;box-shadow:none}
+.btn-back{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-back:hover{border-color:var(--text3);color:var(--text)}
+
+/* RESULT */
+#result{display:none}
+
+.res-header{
+  border:1px solid var(--border2);
+  padding:40px;
+  margin-bottom:24px;
+  position:relative;
+  background:var(--surface);
+  animation:fadeIn 0.6s ease both;
+}
+.res-stamp{
+  position:absolute;
+  top:20px;right:24px;
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--text3);
+  text-align:right;
+  line-height:1.8;
+}
+
+.res-label{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.25em;
+  color:var(--text3);
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.res-type{
+  font-family:var(--mono);
+  font-size:clamp(28px,5vw,44px);
+  font-weight:500;
+  color:#fff;
+  margin-bottom:6px;
+  line-height:1.1;
+}
+.res-code{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--green);
+  letter-spacing:0.1em;
+  margin-bottom:16px;
+}
+.res-tagline{
+  font-size:15px;
+  color:var(--text2);
+  line-height:1.7;
+  border-left:2px solid var(--red);
+  padding-left:16px;
+  font-style:italic;
+}
+
+/* SECTIONS */
+.res-section{
+  border:1px solid var(--border2);
+  margin-bottom:16px;
+  background:var(--surface);
+  animation:fadeIn 0.6s ease both;
+}
+.sec-title{
+  padding:14px 24px;
+  border-bottom:1px solid var(--border);
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.2em;
+  color:var(--text3);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.sec-title .dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.dot-red{background:var(--red)}
+.dot-yellow{background:var(--yellow)}
+.dot-green{background:var(--green)}
+.dot-blue{background:var(--blue)}
+.dot-orange{background:var(--orange)}
+
+.sec-body{padding:24px}
+.sec-body p{
+  font-size:14px;
+  color:var(--text);
+  line-height:1.85;
+  margin-bottom:12px;
+}
+.sec-body p:last-child{margin-bottom:0}
+
+/* BARS */
+.bar-grid{display:flex;flex-direction:column;gap:12px;padding:20px 24px}
+.bar-row{display:grid;grid-template-columns:180px 1fr 48px;align-items:center;gap:12px}
+.bar-name{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.bar-track{height:4px;background:var(--border2);position:relative}
+.bar-fill{height:100%;transition:width 1.2s cubic-bezier(0.4,0,0.2,1)}
+.bar-val{font-family:var(--mono);font-size:11px;text-align:right}
+
+/* TRAITS */
+.trait-grid{
+  display:flex;flex-wrap:wrap;gap:8px;padding:20px 24px;
+}
+.trait{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.1em;
+  padding:6px 14px;
+  border:1px solid;
+}
+.trait-danger{color:var(--red);border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05)}
+.trait-warn{color:var(--yellow);border-color:rgba(234,179,8,0.3);background:rgba(234,179,8,0.05)}
+.trait-ok{color:var(--green);border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.05)}
+.trait-info{color:var(--blue);border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.05)}
+
+/* BLOCKS */
+.block-item{
+  border-left:2px solid var(--border2);
+  padding:12px 16px;
+  margin-bottom:12px;
+}
+.block-item.danger{border-color:var(--red)}
+.block-item.warn{border-color:var(--yellow)}
+.block-item.ok{border-color:var(--green)}
+.block-item h4{
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:500;
+  color:var(--text);
+  margin-bottom:6px;
+  letter-spacing:0.05em;
+}
+.block-item p{font-size:13px;color:var(--text2);margin:0;line-height:1.7}
+
+/* MATRIX */
+.matrix{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:20px 24px;
+}
+.matrix-cell{
+  border:1px solid var(--border);
+  padding:16px;
+  background:var(--bg);
+}
+.matrix-cell h4{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.2em;
+  color:var(--text3);
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.matrix-cell p{font-size:12px;color:var(--text2);line-height:1.7}
+
+/* FOOTER */
+.res-footer{
+  margin-top:32px;
+  padding:24px;
+  border:1px solid var(--border);
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text3);
+  line-height:1.8;
+}
+.res-footer strong{color:var(--text2)}
+
+.restart-area{text-align:center;margin-top:32px}
+
+@media(max-width:560px){
+  .bar-row{grid-template-columns:120px 1fr 36px}
+  .matrix{grid-template-columns:1fr}
+  .intro,.res-header{padding:24px 20px}
+  .sec-body{padding:16px}
+  .opts{padding:12px 16px 16px}
+  .scale-block{padding:12px 16px 16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- INTRO -->
+<div class="intro" id="intro-block">
+  <p class="terminal-line">&gt; initializing psycho_passport.exe <span class="cursor"></span></p>
+  <h1>ПСИХОЛОГИЧЕСКИЙ<br>ПАСПОРТ</h1>
+  <p>Комплексная диагностика личности на основе клинических методологий: Big Five, Dark Triad, теория привязанности, когнитивные искажения, защитные механизмы, эмоциональная регуляция, травматический опыт.</p>
+  <div class="warning-box">
+    <span>⚠ ПРЕДУПРЕЖДЕНИЕ:</span> Результаты будут честными и прямыми — без смягчений, комплиментов и психологической защиты. Это диагностический инструмент, а не способ почувствовать себя лучше. Если вы не готовы к неудобной правде о себе — не начинайте.<br><br>
+    Тест не является клинической заменой живого психолога. При серьёзных симптомах обратитесь к специалисту.
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz">
+  <div class="progress-shell">
+    <div class="prog-top">
+      <span class="prog-label" id="prog-label">БЛОК 1/7 — БОЛЬШАЯ ПЯТЁРКА</span>
+      <span class="prog-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="section-name" id="sect-name">НЕЙРОТИЗМ / ЭКСТРАВЕРСИЯ / ОТКРЫТОСТЬ / СОГЛАСИЕ / ДОБРОСОВЕСТНОСТЬ</div>
+  </div>
+
+  <div id="q-container"></div>
+
+  <div class="nav">
+    <button class="btn btn-back" id="back-btn" onclick="goBack()" style="display:none">← НАЗАД</button>
+    <div class="nav-info" id="nav-info">Отвечено: 0 из 0</div>
+    <button class="btn btn-main" id="next-btn" onclick="goNext()" disabled>ДАЛЕЕ →</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result"></div>
+
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const SECTIONS = [
+  'БОЛЬШАЯ ПЯТЁРКА',
+  'ТЁМНАЯ ТРИАДА',
+  'СТИЛЬ ПРИВЯЗАННОСТИ',
+  'КОГНИТИВНЫЕ ИСКАЖЕНИЯ',
+  'ЗАЩИТНЫЕ МЕХАНИЗМЫ',
+  'ЭМОЦИОНАЛЬНАЯ РЕГУЛЯЦИЯ',
+  'ТРАВМАТИЧЕСКИЙ ФОН'
+];
+
+// Scoring keys explained per question block
+const questions = [
+
+// ── БЛОК 1: BIG FIVE (10q, шкала 1-5) ──
+{block:'B5', section:0, type:'scale', text:'Я часто беспокоюсь о вещах, которые могут пойти не так, даже когда нет явных поводов для тревоги.', scale:['Совсем нет','','','','Абсолютно да'], keys:{N:1}},
+{block:'B5', section:0, type:'scale', text:'Моё настроение часто меняется без видимой причины — я могу быть подавленным утром и раздражённым вечером.', scale:['Совсем нет','','','','Абсолютно да'], keys:{N:1}},
+{block:'B5', section:0, type:'scale', text:'Я легко завожу новые знакомства и получаю энергию от общения с людьми.', scale:['Совсем нет','','','','Абсолютно да'], keys:{E:1}},
+{block:'B5', section:0, type:'scale', text:'Мне важно быть в центре событий — тишина и одиночество меня тяготят.', scale:['Совсем нет','','','','Абсолютно да'], keys:{E:1}},
+{block:'B5', section:0, type:'scale', text:'Меня привлекают необычные идеи, эксперименты, нестандартные взгляды на привычные вещи.', scale:['Совсем нет','','','','Абсолютно да'], keys:{O:1}},
+{block:'B5', section:0, type:'scale', text:'Я готов выслушать человека, даже если его точка зрения мне неприятна, и постараться понять его.', scale:['Совсем нет','','','','Абсолютно да'], keys:{A:1}},
+{block:'B5', section:0, type:'scale', text:'Я часто уступаю в конфликтах, чтобы избежать напряжения, даже если считаю себя правым.', scale:['Совсем нет','','','','Абсолютно да'], keys:{A:1}},
+{block:'B5', section:0, type:'scale', text:'Я выполняю взятые на себя обязательства, даже когда это неудобно или невыгодно.', scale:['Совсем нет','','','','Абсолютно да'], keys:{C:1}},
+{block:'B5', section:0, type:'scale', text:'Мне трудно придерживаться планов — я легко отвлекаюсь и откладываю важные дела.', scale:['Совсем нет','','','','Абсолютно да'], keys:{C:-1}},
+{block:'B5', section:0, type:'scale', text:'Перед важным событием я часто испытываю такой уровень тревоги, что это мешает мне функционировать.', scale:['Совсем нет','','','','Абсолютно да'], keys:{N:1}},
+
+// ── БЛОК 2: DARK TRIAD (9q) ──
+{block:'DT', section:1, type:'opts', text:'Когда мне нужно чего-то добиться от человека, я интуитивно нахожу, на что надавить — его слабости, страхи, желания.', opts:[
+  {text:'Нет, я так не думаю и не действую', scores:{MACH:0}},
+  {text:'Иногда замечаю это в себе, но не использую намеренно', scores:{MACH:1}},
+  {text:'Да, и считаю это навыком, а не чем-то плохим', scores:{MACH:2}},
+  {text:'Да, и целенаправленно использую — результат важнее методов', scores:{MACH:3}},
+]},
+{block:'DT', section:1, type:'opts', text:'Когда кто-то рядом страдает или плачет, что вы испытываете внутри?', opts:[
+  {text:'Боль почти физическая — их состояние захватывает меня', scores:{PSYC:-2,EMP:3}},
+  {text:'Сочувствие и желание помочь', scores:{PSYC:-1,EMP:2}},
+  {text:'Понимаю умом, но особого чувства нет', scores:{PSYC:1,EMP:0}},
+  {text:'Скуку или раздражение — это их проблема', scores:{PSYC:2,NARC:1,EMP:-2}},
+]},
+{block:'DT', section:1, type:'opts', text:'Как вы относитесь к правилам и нормам?', opts:[
+  {text:'Следую им — порядок и предсказуемость важны для меня', scores:{MACH:0}},
+  {text:'Соблюдаю, когда это выгодно или когда могут заметить', scores:{MACH:2,PSYC:1}},
+  {text:'Правила созданы слабыми людьми — я сам определяю, что правильно', scores:{MACH:2,NARC:1,PSYC:1}},
+  {text:'Нарушение правил может быть интересным само по себе', scores:{PSYC:2}},
+]},
+{block:'DT', section:1, type:'opts', text:'Вы сделали что-то, что причинило боль другому человеку. Ваша реакция через неделю:',opts:[
+  {text:'Всё ещё переживаю — муки совести не отпускают', scores:{PSYC:-2,NARC:-1}},
+  {text:'Сожалею, но двигаюсь дальше — сделанного не вернуть', scores:{PSYC:0}},
+  {text:'Рационализировал: они сами виноваты или это было необходимо', scores:{MACH:1,NARC:1}},
+  {text:'Уже не думаю об этом — чужая боль меня мало касается', scores:{PSYC:2,NARC:1}},
+]},
+{block:'DT', section:1, type:'opts', text:'Что вы думаете о своих способностях и значимости по сравнению с большинством людей?', opts:[
+  {text:'Я обычный человек — не лучше и не хуже других', scores:{NARC:0}},
+  {text:'В чём-то я лучше, в чём-то хуже — всё ситуативно', scores:{NARC:0}},
+  {text:'Я умнее и глубже большинства людей вокруг меня', scores:{NARC:2}},
+  {text:'Я особенный и заслуживаю большего, чем имею сейчас', scores:{NARC:3}},
+]},
+{block:'DT', section:1, type:'opts', text:'Как вы реагируете, когда вас критикуют — даже справедливо?', opts:[
+  {text:'Принимаю конструктивную критику, благодарю за неё', scores:{NARC:0}},
+  {text:'Слушаю, но внутри всё равно обижаюсь или злюсь', scores:{NARC:1}},
+  {text:'Критик либо не понимает меня, либо завидует', scores:{NARC:2}},
+  {text:'Критика унижает меня — я не прощаю этого', scores:{NARC:3}},
+]},
+{block:'DT', section:1, type:'opts', text:'Опишите ваш типичный подход к долгосрочным отношениям:', opts:[
+  {text:'Инвестирую искренне — они важны для меня', scores:{PSYC:0,MACH:0}},
+  {text:'Стараюсь строить, но отношения часто разрушаются', scores:{PSYC:1}},
+  {text:'Отношения полезны, пока они мне что-то дают', scores:{MACH:2,PSYC:1}},
+  {text:'Люди расходный материал — когда нужно, заменяются новыми', scores:{PSYC:3,MACH:2,NARC:1}},
+]},
+{block:'DT', section:1, type:'opts', text:'Вы испытываете острое желание рисковать или делать что-то запрещённое — не ради выгоды, а ради самого ощущения?', opts:[
+  {text:'Нет, риск ради риска мне чужд', scores:{PSYC:0}},
+  {text:'Иногда, но останавливаю себя', scores:{PSYC:1}},
+  {text:'Часто — адреналин от риска это кайф', scores:{PSYC:2}},
+  {text:'Да, это одно из немногого, что меня по-настоящему заводит', scores:{PSYC:3}},
+]},
+{block:'DT', section:1, type:'opts', text:'Как часто вы испытываете угрызения совести или чувство вины?', opts:[
+  {text:'Регулярно — иногда даже слишком остро', scores:{PSYC:-2,EMP:2}},
+  {text:'Когда действительно сделал что-то плохое', scores:{PSYC:0}},
+  {text:'Редко — я обычно убеждаю себя, что был прав', scores:{PSYC:1,MACH:1}},
+  {text:'Практически никогда — я не трачу время на самобичевание', scores:{PSYC:3,NARC:1}},
+]},
+
+// ── БЛОК 3: ATTACHMENT (8q) ──
+{block:'ATT', section:2, type:'opts', text:'Когда вы начинаете сближаться с кем-то важным, что вы чувствуете?', opts:[
+  {text:'Радость и открытость — близость это хорошо', scores:{SEC:2}},
+  {text:'Тревогу: а вдруг я им надоем или разочарую?', scores:{ANX:3}},
+  {text:'Некоторое напряжение — я не люблю зависеть от людей', scores:{AVD:2}},
+  {text:'Одновременно хочу близости и боюсь её — это сводит с ума', scores:{FAR:3}},
+]},
+{block:'ATT', section:2, type:'opts', text:'Что происходит, когда важный для вас человек не отвечает долго на сообщение?', opts:[
+  {text:'Думаю, что он занят — не придаю значения', scores:{SEC:2}},
+  {text:'Начинаю прокручивать сценарии: обиделся? разлюбил? устал от меня?', scores:{ANX:3}},
+  {text:'Почти не замечаю — я не слежу за такими вещами', scores:{AVD:2}},
+  {text:'Злюсь и замыкаюсь, потом корю себя за реакцию', scores:{FAR:2,ANX:1}},
+]},
+{block:'ATT', section:2, type:'opts', text:'Ваша стратегия в конфликте с близким человеком:', opts:[
+  {text:'Говорю о чувствах, ищу решение вместе', scores:{SEC:3}},
+  {text:'Прошу прощения быстро, лишь бы не потерять отношения', scores:{ANX:3}},
+  {text:'Замолкаю и дистанцируюсь, пока всё само не рассосётся', scores:{AVD:3}},
+  {text:'Сначала атакую, потом паникую, что сломал всё', scores:{FAR:3}},
+]},
+{block:'ATT', section:2, type:'opts', text:'Как вы себя чувствуете, когда вам говорят «я тебя люблю» или «ты мне очень важен»?', opts:[
+  {text:'Тепло и спокойно — это приятно слышать', scores:{SEC:2}},
+  {text:'Радостно, но сразу возникает страх: а вдруг они передумают?', scores:{ANX:2}},
+  {text:'Неловко — хочется сменить тему или пошутить', scores:{AVD:3}},
+  {text:'Одновременно хорошо и страшно — почти больно', scores:{FAR:3}},
+]},
+{block:'ATT', section:2, type:'opts', text:'Насколько вам комфортно просить о помощи или поддержке?', opts:[
+  {text:'Комфортно — я знаю, что важен людям и могу попросить', scores:{SEC:2}},
+  {text:'Прошу, но чувствую себя обузой', scores:{ANX:2}},
+  {text:'Почти никогда не прошу — предпочитаю справляться сам', scores:{AVD:3}},
+  {text:'Прошу в панике, потом злюсь, что пришлось просить', scores:{FAR:2}},
+]},
+{block:'ATT', section:2, type:'opts', text:'Как вы переносите одиночество?', opts:[
+  {text:'Нормально — мне нужно и время с собой, и время с людьми', scores:{SEC:2}},
+  {text:'Плохо — когда я один, накатывает тревога и ощущение брошенности', scores:{ANX:3}},
+  {text:'Хорошо — мне даже лучше одному, я устаю от людей', scores:{AVD:3}},
+  {text:'По-разному: иногда хочу тишины, иногда невыносимо страшно', scores:{FAR:2}},
+]},
+{block:'ATT', section:2, type:'opts', text:'Как часто у вас повторяются схожие болезненные паттерны в отношениях?', opts:[
+  {text:'Редко — мои отношения в целом здоровые', scores:{SEC:3}},
+  {text:'Часто притягиваю людей, которые меня не ценят', scores:{ANX:2,FAR:1}},
+  {text:'Я склонен уходить до того, как уйдут другие', scores:{AVD:2}},
+  {text:'Постоянно — история всегда одна и та же', scores:{FAR:2,ANX:1}},
+]},
+{block:'ATT', section:2, type:'opts', text:'Когда отношения заканчиваются, ваша типичная реакция:', opts:[
+  {text:'Больно, но я переживаю и двигаюсь дальше', scores:{SEC:2}},
+  {text:'Разрушительно — я теряю почву под ногами на долгое время', scores:{ANX:3}},
+  {text:'Быстро переключаюсь — стараюсь не думать об этом', scores:{AVD:2}},
+  {text:'Хаотично — злюсь, умоляю вернуться, потом ненавижу', scores:{FAR:3}},
+]},
+
+// ── БЛОК 4: КОГНИТИВНЫЕ ИСКАЖЕНИЯ (8q) ──
+{block:'COG', section:3, type:'opts', text:'Вы допустили небольшую ошибку на работе или в жизни. Ваши мысли:', opts:[
+  {text:'«Ошибся — надо исправить и двигаться дальше»', scores:{CAT:0}},
+  {text:'«Вот я дурак — как вообще мог такое сделать»', scores:{CAT:1,SELFC:2}},
+  {text:'«Всё испорчено, теперь будут думать, что я некомпетентен»', scores:{CAT:2,OV:1}},
+  {text:'«Это катастрофа, всё рухнет из-за этого»', scores:{CAT:3}},
+]},
+{block:'COG', section:3, type:'opts', text:'На вечеринке кто-то не поздоровался с вами. Что вы думаете?', opts:[
+  {text:'«Наверное, не заметил» — не придаю значения', scores:{MIND:0}},
+  {text:'«Может, я что-то сделал не так?»', scores:{MIND:1,SELFC:1}},
+  {text:'«Он намеренно игнорирует — значит, плохо ко мне относится»', scores:{MIND:2}},
+  {text:'«Все здесь меня не любят» — и вечер испорчен', scores:{MIND:2,OV:1}},
+]},
+{block:'COG', section:3, type:'opts', text:'Как часто «чёрно-белое» мышление мешает вам — всё либо отлично, либо ужасно?', opts:[
+  {text:'Редко — я хорошо вижу оттенки', scores:{DICHOT:0}},
+  {text:'Иногда в стрессовых ситуациях', scores:{DICHOT:1}},
+  {text:'Часто — мне трудно воспринимать что-то «наполовину»', scores:{DICHOT:2}},
+  {text:'Почти всегда — промежуточных состояний для меня почти не существует', scores:{DICHOT:3}},
+]},
+{block:'COG', section:3, type:'opts', text:'Что вы думаете о своих достижениях?', opts:[
+  {text:'Признаю их честно — горжусь тем, что сделал', scores:{SELFC:0}},
+  {text:'Часто думаю: «мне просто повезло» или «другие справились бы лучше»', scores:{SELFC:2,IMP:2}},
+  {text:'Обесцениваю — когда добился чего-то, это перестаёт казаться важным', scores:{SELFC:2,OV:1}},
+  {text:'Хорошее кажется случайным, плохое — закономерным', scores:{SELFC:3}},
+]},
+{block:'COG', section:3, type:'opts', text:'Как вы обычно принимаете решения?', opts:[
+  {text:'Анализирую, взвешиваю варианты, принимаю решение', scores:{IMP:0}},
+  {text:'Долго откладываю из страха ошибиться', scores:{IMP:1,CAT:1}},
+  {text:'Действую импульсивно, потом сожалею', scores:{IMP:2}},
+  {text:'Избегаю решений — пусть всё решится само', scores:{IMP:1,AVD_COG:2}},
+]},
+{block:'COG', section:3, type:'opts', text:'Вы получили повышение / комплимент / хорошую оценку. Что внутри?', opts:[
+  {text:'Радость и удовлетворение — я заслужил это', scores:{IMP:0,SELFC:0}},
+  {text:'Радуюсь, но жду, когда «разоблачат»', scores:{IMP:2,SELFC:2}},
+  {text:'Думаю: «это ничего не значит, мог бы лучше»', scores:{SELFC:2,OV:1}},
+  {text:'Почти не радуюсь — анестезия, ничего не чувствую', scores:{SELFC:3,AFF_FLAT:1}},
+]},
+{block:'COG', section:3, type:'opts', text:'Как вы относитесь к будущему?', opts:[
+  {text:'С умеренным оптимизмом — будет и хорошее, и плохое', scores:{CAT:0}},
+  {text:'Тревожно — слишком много неопределённости', scores:{CAT:1}},
+  {text:'Жду плохого — лучше подготовиться к худшему', scores:{CAT:2}},
+  {text:'Будущее бессмысленно — зачем вообще планировать', scores:{CAT:2,AFF_FLAT:1}},
+]},
+{block:'COG', section:3, type:'opts', text:'Когда вы делаете что-то для других, что движет вами чаще всего?', opts:[
+  {text:'Искреннее желание помочь', scores:{MIND:0}},
+  {text:'Желание нравиться и получить одобрение', scores:{MIND:1,ANX:1}},
+  {text:'Страх отказать — даже когда не хочу помогать', scores:{MIND:1,ANX:2}},
+  {text:'Расчёт: потом смогу потребовать что-то взамен', scores:{MACH:2}},
+]},
+
+// ── БЛОК 5: ЗАЩИТНЫЕ МЕХАНИЗМЫ (7q) ──
+{block:'DEF', section:4, type:'opts', text:'Вы злитесь на начальника, но кричите на близкого человека вечером. Вы это замечаете?', opts:[
+  {text:'Да, я осознаю и стараюсь не переносить', scores:{DEF_DISP:0}},
+  {text:'Замечаю иногда — это трудно контролировать', scores:{DEF_DISP:1}},
+  {text:'Нет, обычно не связываю эти вещи', scores:{DEF_DISP:2}},
+  {text:'Вообще не понимаю, о чём вы — я реагирую на конкретную ситуацию', scores:{DEF_DISP:3}},
+]},
+{block:'DEF', section:4, type:'opts', text:'Когда что-то болезненное происходит — потеря, провал, предательство — что вы делаете прежде всего?', opts:[
+  {text:'Позволяю себе почувствовать, проговорить, осмыслить', scores:{DEF_REP:0}},
+  {text:'Ухожу в работу, спорт, занятость — чтобы не думать', scores:{DEF_SUBLI:1}},
+  {text:'Убеждаю себя, что всё не так уж плохо или так было лучше', scores:{DEF_RAT:2}},
+  {text:'Перестаю вообще думать об этом — вытесняю', scores:{DEF_REP:3}},
+]},
+{block:'DEF', section:4, type:'opts', text:'Когда вы злитесь или обижаетесь, как это обычно выражается?', opts:[
+  {text:'Прямо говорю о своих чувствах', scores:{DEF_PASS:0}},
+  {text:'Молчу, но всем видом показываю, что что-то не так', scores:{DEF_PASS:2}},
+  {text:'Делаю вид, что всё нормально, и злюсь внутри', scores:{DEF_PASS:3,DEF_REP:1}},
+  {text:'Шучу или иронизирую, прячась за юмор', scores:{DEF_PASS:1}},
+]},
+{block:'DEF', section:4, type:'opts', text:'Вы узнали о себе что-то неприятное — факт, который подрывает ваш образ себя. Реакция:', opts:[
+  {text:'Принимаю, осмысляю, корректирую взгляд на себя', scores:{DEF_DEN:0}},
+  {text:'Спорю, нахожу объяснения, почему это неправда', scores:{DEF_DEN:2}},
+  {text:'Источник неправильный — нападаю на него, а не на идею', scores:{DEF_DEN:3}},
+  {text:'Соглашаюсь, но потом действую как прежде', scores:{DEF_DEN:1}},
+]},
+{block:'DEF', section:4, type:'opts', text:'Вы хотите чего-то, что считаете недостойным или постыдным. Как вы с этим обращаетесь?', opts:[
+  {text:'Признаю желание, решаю, как с ним быть', scores:{DEF_REP:0}},
+  {text:'Убеждаю себя, что мне это вообще не нужно', scores:{DEF_REP:2}},
+  {text:'Осуждаю это желание в других, скрывая его в себе', scores:{DEF_PROJ:3}},
+  {text:'Превращаю в что-то «приемлемое» — работу, помощь другим', scores:{DEF_SUBLI:2}},
+]},
+{block:'DEF', section:4, type:'opts', text:'Если кто-то злит вас, какова ваша первая мысль?', opts:[
+  {text:'«Что именно во мне это задело?»', scores:{DEF_PROJ:0}},
+  {text:'«Он просто неприятный человек»', scores:{DEF_PROJ:1}},
+  {text:'«Все такие — люди в целом раздражают»', scores:{DEF_PROJ:2}},
+  {text:'«В нём есть то, что я ненавижу в себе»', scores:{DEF_PROJ:0}},
+]},
+{block:'DEF', section:4, type:'opts', text:'Как часто вы возвращаетесь к одним и тем же жизненным ошибкам?', opts:[
+  {text:'Редко — я учусь на опыте', scores:{DEF_COMP:0}},
+  {text:'Иногда — некоторые паттерны трудно изменить', scores:{DEF_COMP:1}},
+  {text:'Часто — я будто обречён повторять одно и то же', scores:{DEF_COMP:2}},
+  {text:'Постоянно — жизнь как один и тот же круг', scores:{DEF_COMP:3}},
+]},
+
+// ── БЛОК 6: ЭМОЦИОНАЛЬНАЯ РЕГУЛЯЦИЯ (6q) ──
+{block:'ER', section:5, type:'opts', text:'Когда вас захватывает сильная эмоция — злость, страх, горе — что происходит?', opts:[
+  {text:'Замечаю её, называю, дышу — удерживаю контроль', scores:{ER_HIGH:0}},
+  {text:'Пытаюсь контролировать, но иногда «прорывает»', scores:{ER_HIGH:1}},
+  {text:'Захлёстывает — я теряю способность думать рационально', scores:{ER_HIGH:3}},
+  {text:'Ничего — я будто не чувствую острых эмоций', scores:{ER_NUMB:3}},
+]},
+{block:'ER', section:5, type:'opts', text:'Как вы справляетесь со стрессом?', opts:[
+  {text:'Физическая активность, сон, разговор с близкими', scores:{COPE_GOOD:2}},
+  {text:'Уход в работу / продуктивность', scores:{COPE_MID:1}},
+  {text:'Еда, алкоголь, сериалы, скроллинг без остановки', scores:{COPE_BAD:2}},
+  {text:'Изоляция, замирание, ничегонеделание', scores:{COPE_BAD:1,ER_NUMB:1}},
+]},
+{block:'ER', section:5, type:'opts', text:'Как долго вы «отходите» после серьёзного конфликта или тревожащего события?', opts:[
+  {text:'Несколько часов — быстро восстанавливаюсь', scores:{ER_HIGH:0}},
+  {text:'День-два — нужно время', scores:{ER_HIGH:1}},
+  {text:'Неделю и больше — событие долго висит надо мной', scores:{ER_HIGH:2}},
+  {text:'Месяцами — некоторые вещи вообще не отпускают', scores:{ER_HIGH:3}},
+]},
+{block:'ER', section:5, type:'opts', text:'Можете ли вы назвать своё эмоциональное состояние прямо сейчас, используя больше трёх слов?', opts:[
+  {text:'Да, легко — у меня богатый эмоциональный словарь', scores:{ALEXITH:0}},
+  {text:'Могу, но это требует усилий', scores:{ALEXITH:1}},
+  {text:'Трудно — чувствую «что-то», но точно назвать не могу', scores:{ALEXITH:2}},
+  {text:'Нет — обычно «нормально», «не очень», «устал»', scores:{ALEXITH:3}},
+]},
+{block:'ER', section:5, type:'opts', text:'Что происходит, когда ваши потребности и чувства игнорируются другими людьми?', opts:[
+  {text:'Говорю об этом прямо и устанавливаю границы', scores:{ER_HIGH:0}},
+  {text:'Обижаюсь, но молчу — жду, что заметят', scores:{ER_HIGH:1,ANX:1}},
+  {text:'Начинаю агрессивно реагировать на мелочи', scores:{ER_HIGH:2}},
+  {text:'Терплю до взрыва или ухода без объяснений', scores:{ER_HIGH:2,AVD:1}},
+]},
+{block:'ER', section:5, type:'opts', text:'Бывает ли у вас состояние, когда вы чувствуете себя «отключённым» — нереальность себя или мира вокруг?', opts:[
+  {text:'Нет, не припоминаю такого', scores:{DISSOC:0}},
+  {text:'Изредка, в состоянии сильного стресса', scores:{DISSOC:1}},
+  {text:'Достаточно часто — это привычное состояние', scores:{DISSOC:2}},
+  {text:'Почти постоянно — я как будто наблюдаю за жизнью со стороны', scores:{DISSOC:3}},
+]},
+
+// ── БЛОК 7: ТРАВМАТИЧЕСКИЙ ФОН (6q) ──
+{block:'TR', section:6, type:'opts', text:'Как бы вы описали атмосферу в вашем детском доме?', opts:[
+  {text:'Тёплой и поддерживающей — чувствовал себя в безопасности', scores:{TR_ACE:0}},
+  {text:'Нестабильной — хорошее чередовалось с плохим', scores:{TR_ACE:1}},
+  {text:'Холодной или тревожной — нужно было быть осторожным', scores:{TR_ACE:2}},
+  {text:'Опасной, унизительной или хаотичной', scores:{TR_ACE:3}},
+]},
+{block:'TR', section:6, type:'opts', text:'Были ли в вашем детстве/подростковом возрасте переживания, которые вы до сих пор стараетесь не вспоминать?', opts:[
+  {text:'Нет, ничего существенного', scores:{TR_ACE:0}},
+  {text:'Есть неприятные воспоминания, но они не давят', scores:{TR_ACE:1}},
+  {text:'Да, есть вещи, которые стараюсь не трогать', scores:{TR_ACE:2}},
+  {text:'Да, и некоторые воспоминания до сих пор вызывают острую реакцию', scores:{TR_ACE:3,TR_PTSD:2}},
+]},
+{block:'TR', section:6, type:'opts', text:'Бывает ли у вас резкая, непропорциональная реакция на что-то — запах, звук, ситуацию — которая «накрывает» без видимой причины?', opts:[
+  {text:'Нет', scores:{TR_PTSD:0}},
+  {text:'Изредка — что-то «жмёт», но я не знаю почему', scores:{TR_PTSD:1}},
+  {text:'Да, бывает — и потом долго прихожу в себя', scores:{TR_PTSD:2}},
+  {text:'Часто — это сильно влияет на качество жизни', scores:{TR_PTSD:3}},
+]},
+{block:'TR', section:6, type:'opts', text:'Как вы относитесь к своему телу?', opts:[
+  {text:'В целом позитивно — оно мой союзник', scores:{TR_BODY:0}},
+  {text:'Нейтрально — просто инструмент', scores:{TR_BODY:1}},
+  {text:'С недовольством — оно меня подводит или не устраивает', scores:{TR_BODY:2}},
+  {text:'С отчуждением или враждебностью — оно чужое', scores:{TR_BODY:3,DISSOC:1}},
+]},
+{block:'TR', section:6, type:'opts', text:'Как часто у вас бывают мысли о том, что вы недостаточно хороши, что вы обуза или что вам нет места?', opts:[
+  {text:'Редко или никогда', scores:{TR_SHAME:0}},
+  {text:'В тяжёлые периоды', scores:{TR_SHAME:1}},
+  {text:'Регулярно — это фоновый шум в голове', scores:{TR_SHAME:2}},
+  {text:'Почти всегда — это моя базовая установка о себе', scores:{TR_SHAME:3}},
+]},
+{block:'TR', section:6, type:'opts', text:'Когда вы достигаете успеха или получаете что-то хорошее, как долго это ощущается хорошим?', opts:[
+  {text:'Долго — я умею удерживать радость', scores:{TR_SHAME:0}},
+  {text:'Недолго — быстро обесценивается', scores:{TR_SHAME:1,SELFC:1}},
+  {text:'Почти не ощущается — хорошее кажется незаслуженным', scores:{TR_SHAME:2,IMP:2}},
+  {text:'Вызывает тревогу — жду, когда это отнимут', scores:{TR_SHAME:3,ANX:2}},
+]},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentQ = 0;
+let answers = new Array(questions.length).fill(null);
+let scaleValues = {};
+
+function totalAnswered(){
+  return answers.filter(a=>a!==null).length;
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderQ(){
+  const q = questions[currentQ];
+  const total = questions.length;
+  const pct = Math.round((currentQ/total)*100);
+
+  document.getElementById('prog-label').textContent = `БЛОК ${q.section+1}/7 — ${SECTIONS[q.section]}`;
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('sect-name').textContent = getSectionDesc(q.section);
+  document.getElementById('nav-info').textContent = `Отвечено: ${totalAnswered()} из ${total}`;
+
+  const container = document.getElementById('q-container');
+  container.innerHTML='';
+
+  const card = document.createElement('div');
+  card.className='q-block';
+
+  if(q.type==='scale'){
+    card.innerHTML=`
+      <div class="q-head">
+        <div class="q-meta">
+          <span>${String(currentQ+1).padStart(2,'0')}/${String(total).padStart(2,'0')}</span>
+          <span class="tag">${q.block}</span>
+        </div>
+        <div class="q-text">${q.text}</div>
+      </div>
+      <div class="scale-block">
+        <div class="scale-labels"><span>${q.scale[0]}</span><span>${q.scale[4]}</span></div>
+        <div class="scale-opts" id="scale-opts">
+          ${[1,2,3,4,5].map(v=>`<button class="scale-btn${answers[currentQ]===v?' selected':''}" onclick="selectScale(${v})">${v}</button>`).join('')}
+        </div>
+      </div>`;
+  } else {
+    card.innerHTML=`
+      <div class="q-head">
+        <div class="q-meta">
+          <span>${String(currentQ+1).padStart(2,'0')}/${String(total).padStart(2,'0')}</span>
+          <span class="tag">${q.block}</span>
+        </div>
+        <div class="q-text">${q.text}</div>
+      </div>
+      <div class="opts">
+        ${q.opts.map((o,i)=>`<button class="opt${answers[currentQ]===i?' selected':''}" onclick="selectOpt(${i})"><span class="opt-dot"></span><span>${o.text}</span></button>`).join('')}
+      </div>`;
+  }
+
+  container.appendChild(card);
+
+  document.getElementById('next-btn').disabled = answers[currentQ]===null;
+  document.getElementById('next-btn').textContent = currentQ===total-1 ? 'ПОЛУЧИТЬ ПАСПОРТ →' : 'ДАЛЕЕ →';
+  document.getElementById('back-btn').style.display = currentQ>0?'block':'none';
+}
+
+function getSectionDesc(s){
+  const d=['НЕЙРОТИЗМ · ЭКСТРАВЕРСИЯ · ОТКРЫТОСТЬ · СОГЛАСИЕ · ДОБРОСОВЕСТНОСТЬ',
+    'МАКИАВЕЛЛИЗМ · НАРЦИССИЗМ · ПСИХОПАТИЯ',
+    'НАДЁЖНЫЙ · ТРЕВОЖНЫЙ · ИЗБЕГАЮЩИЙ · ДЕЗОРГАНИЗОВАННЫЙ',
+    'КАТАСТРОФИЗАЦИЯ · ЧТЕНИЕ МЫСЛЕЙ · ДИХОТОМИЯ · САМОКРИТИКА',
+    'ВЫТЕСНЕНИЕ · РАЦИОНАЛИЗАЦИЯ · ПРОЕКЦИЯ · СМЕЩЕНИЕ',
+    'РЕГУЛЯЦИЯ · АЛЕКСИТИМИЯ · ДИССОЦИАЦИЯ · КОПИНГ',
+    'ДЕТСКИЙ ОПЫТ · СТЫД · ПТСР-ПАТТЕРНЫ · ТЕЛЕСНОСТЬ'];
+  return d[s]||'';
+}
+
+function selectOpt(i){
+  answers[currentQ]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>el.classList.toggle('selected',idx===i));
+  document.getElementById('next-btn').disabled=false;
+}
+
+function selectScale(v){
+  answers[currentQ]=v;
+  document.querySelectorAll('.scale-btn').forEach((el,idx)=>el.classList.toggle('selected',idx===v-1));
+  document.getElementById('next-btn').disabled=false;
+}
+
+function goNext(){
+  if(answers[currentQ]===null)return;
+  if(currentQ<questions.length-1){
+    currentQ++;
+    renderQ();
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    buildResult();
+  }
+}
+
+function goBack(){
+  if(currentQ>0){currentQ--;renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+}
+
+// ============================================================
+// SCORING
+// ============================================================
+function calcScores(){
+  const sc={N:0,E:0,O:0,A:0,C:0,MACH:0,NARC:0,PSYC:0,EMP:0,
+    SEC:0,ANX:0,AVD:0,FAR:0,
+    CAT:0,MIND:0,DICHOT:0,SELFC:0,IMP:0,OV:0,AVD_COG:0,AFF_FLAT:0,
+    DEF_DISP:0,DEF_REP:0,DEF_RAT:0,DEF_PASS:0,DEF_DEN:0,DEF_PROJ:0,DEF_SUBLI:0,DEF_COMP:0,
+    ER_HIGH:0,ER_NUMB:0,COPE_GOOD:0,COPE_MID:0,COPE_BAD:0,ALEXITH:0,DISSOC:0,
+    TR_ACE:0,TR_PTSD:0,TR_SHAME:0,TR_BODY:0};
+
+  questions.forEach((q,i)=>{
+    const ans=answers[i];
+    if(ans===null)return;
+
+    if(q.type==='scale'){
+      const val=ans; // 1-5
+      const centered=val-3; // -2..+2
+      Object.entries(q.keys).forEach(([k,dir])=>{
+        sc[k]=(sc[k]||0)+centered*dir;
+      });
+    } else {
+      const opt=q.opts[ans];
+      Object.entries(opt.scores).forEach(([k,v])=>{
+        sc[k]=(sc[k]||0)+v;
+      });
+    }
+  });
+  return sc;
+}
+
+// ============================================================
+// RESULT BUILDING
+// ============================================================
+function buildResult(){
+  const sc=calcScores();
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('intro-block').style.display='none';
+
+  const res=document.getElementById('result');
+  res.style.display='block';
+  res.innerHTML='';
+
+  // Derive personality type
+  const type=deriveType(sc);
+  const attach=deriveAttach(sc);
+  const darkLevel=deriveDark(sc);
+  const trauma=deriveTrauma(sc);
+
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('ru-RU');
+
+  // ── HEADER ──
+  res.innerHTML+=`
+    <div class="res-header">
+      <div class="res-stamp">ПСИХОПАСПОРТ<br>${dateStr}<br>54 вопроса</div>
+      <div class="res-label">ПСИХОЛОГИЧЕСКИЙ ТИП</div>
+      <div class="res-type">${type.name}</div>
+      <div class="res-code">${type.code}</div>
+      <div class="res-tagline">${type.tagline}</div>
+    </div>`;
+
+  // ── BIG FIVE ──
+  res.innerHTML+=renderB5(sc);
+
+  // ── ATTACHMENT ──
+  res.innerHTML+=renderAttach(attach, sc);
+
+  // ── DARK TRIAD ──
+  res.innerHTML+=renderDark(darkLevel, sc);
+
+  // ── COGNITIVE ──
+  res.innerHTML+=renderCognitive(sc);
+
+  // ── DEFENSES ──
+  res.innerHTML+=renderDefenses(sc);
+
+  // ── EMOTION REG ──
+  res.innerHTML+=renderER(sc);
+
+  // ── TRAUMA ──
+  res.innerHTML+=renderTrauma(trauma, sc);
+
+  // ── SHADOW ──
+  res.innerHTML+=renderShadow(sc);
+
+  // ── RECOMMENDATIONS ──
+  res.innerHTML+=renderRecs(sc, attach, darkLevel, trauma);
+
+  // ── FOOTER ──
+  res.innerHTML+=`
+    <div class="res-footer">
+      <strong>Методологическая база:</strong> Big Five (NEO-PI), Dark Triad (SD3), Теория привязанности (AAI), Beck's Cognitive Distortions, Defense Mechanism Rating Scale, DERS, ACE Study.<br><br>
+      <strong>Ограничения:</strong> Самоотчёт имеет систематические искажения — вы видите себя так, как хотите видеть, а не всегда так, как есть. Особенно это касается Тёмной триады и защитных механизмов. Для точной клинической картины необходима работа со специалистом.
+    </div>
+    <div class="restart-area" style="margin-top:24px">
+      <button class="btn btn-main" onclick="location.reload()">↺ ПРОЙТИ ЗАНОВО</button>
+    </div>`;
+
+  // animate bars
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill[data-w]').forEach(b=>{
+      b.style.width=b.dataset.w+'%';
+    });
+  },200);
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── TYPE ──
+function deriveType(sc){
+  const highN=sc.N>2;
+  const highE=sc.E>2;
+  const highO=sc.O>0;
+  const lowA=sc.A<-1;
+  const lowC=sc.C<-1;
+
+  if(highN && lowC) return {name:'Дисрегулированный исследователь',code:'N+/C-/O+',tagline:'Вы мыслите глубоко и чувствуете остро — но хаос внутри мешает реализовать это в жизни. Тревога съедает энергию, которая могла бы строить.'};
+  if(highN && !highE) return {name:'Интровертный тревожный',code:'N+/E-',tagline:'Вы живёте внутри себя — напряжённо, рефлексивно, с постоянным фоновым ощущением, что что-то идёт не так. Мир кажется слишком громким.'};
+  if(!highN && highE && !lowA) return {name:'Социально адаптивный',code:'E+/N-/A+',tagline:'Вы функционируете. Это и достижение, и опасность — функциональность часто маскирует то, что требует внимания.'};
+  if(lowA && sc.MACH>3) return {name:'Стратегический одиночка',code:'A-/MACH+',tagline:'Вы умны, холодны и эффективны. Люди для вас — ресурс или помеха. Это работает, пока не ломается.'};
+  if(sc.TR_SHAME>4) return {name:'Выживший с токсичным стыдом',code:'SHAME+/TR+',tagline:'Глубокое убеждение в собственной дефектности управляет вашими решениями чаще, чем вы думаете.'};
+  if(highO && lowC) return {name:'Творческий дрейф',code:'O+/C-',tagline:'Богатый внутренний мир. Слабая связь с реальностью. Вы генерируете — но редко завершаете.'};
+  return {name:'Адаптивный компенсатор',code:'BALANCED',tagline:'Вы научились справляться. Это не то же самое, что быть здоровым — но это рабочая стратегия.'};
+}
+
+// ── ATTACHMENT ──
+function deriveAttach(sc){
+  const vals={SEC:sc.SEC,ANX:sc.ANX,AVD:sc.AVD,FAR:sc.FAR};
+  return Object.entries(vals).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+// ── DARK ──
+function deriveDark(sc){
+  return sc.MACH+sc.NARC+sc.PSYC;
+}
+
+// ── TRAUMA ──
+function deriveTrauma(sc){
+  return sc.TR_ACE+sc.TR_PTSD+sc.TR_SHAME+sc.TR_BODY;
+}
+
+// ── SECTION RENDERERS ──
+
+function renderB5(sc){
+  const N=clamp(sc.N,-8,8);
+  const E=clamp(sc.E,-4,4);
+  const O=clamp(sc.O,-2,2);
+  const A=clamp(sc.A,-2,4);
+  const C=clamp(sc.C,-2,4);
+
+  const toPercent=(v,min,max)=>Math.round(((v-min)/(max-min))*100);
+  const Np=toPercent(N,-8,8);
+  const Ep=toPercent(E,-4,4);
+  const Op=toPercent(O,-2,2);
+  const Ap=toPercent(A,-2,4);
+  const Cp=toPercent(C,-2,4);
+
+  const Ndesc=Np>65?'<span class="trait trait-danger">ВЫСОКИЙ</span> Хроническая тревожность, эмоциональная нестабильность. Вы испытываете стресс там, где другие — нет.':
+    Np<35?'<span class="trait trait-ok">НИЗКИЙ</span> Эмоциональная устойчивость. Редко выбиваетесь из равновесия.':
+    '<span class="trait trait-warn">СРЕДНИЙ</span> Ситуативная тревожность. Под давлением может расти.';
+
+  const Edesc=Ep>65?'<span class="trait trait-ok">ВЫСОКАЯ</span> Черпаете энергию от людей. Одиночество истощает.':
+    Ep<35?'<span class="trait trait-warn">НИЗКАЯ</span> Интроверсия. Социальные ситуации затратны. Восстановление в одиночестве.':
+    '<span class="trait trait-info">СРЕДНЯЯ</span> Амбиверт. Нужен баланс.';
+
+  const Odesc=Op>50?'<span class="trait trait-info">ВЫСОКАЯ</span> Открытость опыту, любопытство, нестандартность. Иногда мешает заземлению.':
+    '<span class="trait trait-warn">НИЗКАЯ</span> Практичность, консерватизм. Устойчивость ценится выше новизны.';
+
+  const Adesc=Ap>65?'<span class="trait trait-warn">ВЫСОКОЕ</span> Склонность к уступчивости. Риск: соглашаетесь в ущерб себе.':
+    Ap<35?'<span class="trait trait-danger">НИЗКОЕ</span> Конфронтационность. Сложности в кооперации. Часто сочетается с тёмной триадой.':
+    '<span class="trait trait-ok">НОРМА</span>';
+
+  const Cdesc=Cp>65?'<span class="trait trait-ok">ВЫСОКАЯ</span> Самодисциплина, надёжность. Возможный перфекционизм.':
+    Cp<35?'<span class="trait trait-danger">НИЗКАЯ</span> Проблемы с самоорганизацией. Импульсивность. Незавершённые цели.':
+    '<span class="trait trait-ok">СРЕДНЯЯ</span>';
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-blue"></span>БОЛЬШАЯ ПЯТЁРКА — БАЗОВЫЙ ХАРАКТЕР</div>
+    <div class="bar-grid">
+      ${bar('Нейротизм',Np,'#ef4444')}
+      ${bar('Экстраверсия',Ep,'#3b82f6')}
+      ${bar('Открытость',Op,'#8b5cf6')}
+      ${bar('Согласие',Ap,'#22c55e')}
+      ${bar('Добросовестность',Cp,'#f97316')}
+    </div>
+    <div class="sec-body" style="padding-top:0">
+      <div class="block-item ${Np>65?'danger':Np<35?'ok':'warn'}"><h4>НЕЙРОТИЗМ — ${Np}%</h4><p>${Ndesc}</p></div>
+      <div class="block-item ${Ep<35?'warn':'ok'}"><h4>ЭКСТРАВЕРСИЯ — ${Ep}%</h4><p>${Edesc}</p></div>
+      <div class="block-item ${Op>50?'ok':'warn'}"><h4>ОТКРЫТОСТЬ — ${Op}%</h4><p>${Odesc}</p></div>
+      <div class="block-item ${Ap>65?'warn':Ap<35?'danger':'ok'}"><h4>СОГЛАСИЕ — ${Ap}%</h4><p>${Adesc}</p></div>
+      <div class="block-item ${Cp<35?'danger':Cp>65?'ok':'warn'}"><h4>ДОБРОСОВЕСТНОСТЬ — ${Cp}%</h4><p>${Cdesc}</p></div>
+    </div>
+  </div>`;
+}
+
+function renderAttach(attach, sc){
+  const descs={
+    SEC:{label:'НАДЁЖНАЯ',color:'green',text:'Вы способны на близость без потери себя. Конфликты не разрушают отношения в вашем восприятии. Вы доверяете по умолчанию, пока не дали повод иначе. Это редкость — и, скорее всего, результат хотя бы одного надёжного взрослого в детстве.'},
+    ANX:{label:'ТРЕВОЖНАЯ',color:'yellow',text:'Ваша базовая установка: «меня бросят». Вы читаете сигналы отвержения там, где их нет. Потребность в подтверждении высокая — вам нужно слышать «ты важен» регулярно, иначе сомневаетесь. В отношениях вы склонны к гиперконтролю или слиянию. Хроническая тревога в близости истощает и вас, и партнёра.'},
+    AVD:{label:'ИЗБЕГАЮЩАЯ',color:'orange',text:'Близость ощущается как угроза автономии. Вы научились не нуждаться — но это не то же самое, что не нуждаться на самом деле. За «мне никто не нужен» часто стоит старая боль, которая так и не была переработана. Вы уходите до того, как могут уйти — превентивно. Это защита, но она стоит дорого.'},
+    FAR:{label:'ДЕЗОРГАНИЗОВАННАЯ',color:'red',text:'Самый травматичный паттерн. Человек одновременно является источником безопасности и угрозы — именно так формируется этот стиль. Вы хотите близости и боитесь её с одинаковой силой. Отношения — хаос: то слияние, то разрыв. Реакции непредсказуемы для вас самих. Без терапии этот паттерн почти не меняется.'},
+  };
+  const d=descs[attach];
+  const colorClass=d.color==='red'?'danger':d.color==='yellow'?'warn':d.color==='orange'?'warn':'ok';
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-${d.color==='red'?'red':d.color==='yellow'?'yellow':d.color==='orange'?'orange':'green'}"></span>СТИЛЬ ПРИВЯЗАННОСТИ</div>
+    <div class="sec-body">
+      <div class="block-item ${colorClass}"><h4>${d.label} ПРИВЯЗАННОСТЬ</h4><p>${d.text}</p></div>
+      ${attach!=='SEC'?`<p style="color:var(--text2);font-size:13px">Стиль привязанности формируется до 2 лет и воспроизводится во всех значимых отношениях — романтических, дружеских, профессиональных. Без осознания и работы он передаётся следующему поколению.</p>`:''}
+    </div>
+  </div>`;
+}
+
+function renderDark(total, sc){
+  const Mp=Math.min(100,Math.round((sc.MACH/9)*100));
+  const Np2=Math.min(100,Math.round((sc.NARC/9)*100));
+  const Pp=Math.min(100,Math.round((sc.PSYC/9)*100));
+
+  let overall='';
+  if(total>14) overall='<div class="block-item danger"><h4>⚠ ВЫСОКИЙ СУММАРНЫЙ БАЛЛ ТЁМНОЙ ТРИАДЫ</h4><p>Сочетание высокого макиавеллизма, нарциссизма и черт психопатии — это серьёзный риск. Вы, вероятно, эффективны и умеете добиваться целей. Но отношения с вами токсичны для других, а ваша жизнь, скорее всего, характеризуется поверхностными связями и нарастающей изоляцией. Это не диагноз — но сигнал, который стоит воспринять серьёзно.</p></div>';
+  else if(total>7) overall='<div class="block-item warn"><h4>УМЕРЕННЫЕ ЧЕРТЫ ТЁМНОЙ ТРИАДЫ</h4><p>Присутствуют манипулятивные стратегии, нарциссические защиты или сниженная эмпатия. В стрессе эти черты усиливаются. Осознанность здесь критична.</p></div>';
+  else overall='<div class="block-item ok"><h4>НИЗКИЙ БАЛЛ ТЁМНОЙ ТРИАДЫ</h4><p>Выраженных манипулятивных или антисоциальных черт не обнаружено. Либо их действительно нет, либо присутствует высокая социальная желательность в ответах.</p></div>';
+
+  const Mdesc=Mp>60?'Высокий. Вы стратегически управляете людьми, используете их слабости, скрываете истинные мотивы. Цель оправдывает средства.':
+    Mp>35?'Умеренный. Можете манипулировать ситуативно, особенно в конкурентной среде.':'Низкий.';
+  const Ndesc2=Np2>60?'Высокий. Грандиозность, потребность в восхищении, гиперчувствительность к критике. Эмпатия ситуативна.':
+    Np2>35?'Умеренный. Нарциссические защиты присутствуют — особенно под угрозой самооценки.':'Низкий.';
+  const Pdesc=Pp>60?'Высокий. Сниженная эмпатия, импульсивность, бесстрашие перед последствиями. Серьёзный клинический маркер.':
+    Pp>35?'Умеренный. Поиск острых ощущений, снижение чувства вины в некоторых контекстах.':'Низкий.';
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-red"></span>ТЁМНАЯ ТРИАДА</div>
+    <div class="bar-grid">
+      ${bar('Макиавеллизм',Mp,'#ef4444')}
+      ${bar('Нарциссизм',Np2,'#f97316')}
+      ${bar('Психопатия',Pp,'#dc2626')}
+    </div>
+    <div class="sec-body" style="padding-top:0">
+      ${overall}
+      <div class="block-item ${Mp>60?'danger':Mp>35?'warn':'ok'}"><h4>МАКИАВЕЛЛИЗМ</h4><p>${Mdesc}</p></div>
+      <div class="block-item ${Np2>60?'danger':Np2>35?'warn':'ok'}"><h4>НАРЦИССИЗМ</h4><p>${Ndesc2}</p></div>
+      <div class="block-item ${Pp>60?'danger':Pp>35?'warn':'ok'}"><h4>ПСИХОПАТИЯ</h4><p>${Pdesc}</p></div>
+    </div>
+  </div>`;
+}
+
+function renderCognitive(sc){
+  const distortions=[];
+  if(sc.CAT>3) distortions.push({name:'Катастрофизация',sev:'danger',desc:'Вы автоматически ожидаете худшего и раздуваете негативные сценарии. Тревога питается этим механизмом.'});
+  if(sc.MIND>2) distortions.push({name:'Чтение мыслей',sev:'warn',desc:'Вы убеждены, что знаете, что думают другие — и почти всегда это негативно в отношении вас.'});
+  if(sc.DICHOT>1) distortions.push({name:'Дихотомическое мышление',sev:'warn',desc:'«Всё или ничего». Промежуточные состояния не воспринимаются. Это кормит перфекционизм и депрессию.'});
+  if(sc.SELFC>3) distortions.push({name:'Чрезмерная самокритика',sev:'danger',desc:'Стандарты для себя значительно жёстче, чем для других. Ошибки воспринимаются как доказательство дефектности.'});
+  if(sc.IMP>2) distortions.push({name:'Синдром самозванца',sev:'warn',desc:'Успех кажется случайным, провал — закономерным. Ожидание «разоблачения» хронично.'});
+  if(sc.OV>1) distortions.push({name:'Сверхобобщение',sev:'warn',desc:'Одно негативное событие становится доказательством глобального паттерна.'});
+  if(sc.AFF_FLAT>1) distortions.push({name:'Аффективная анестезия',sev:'danger',desc:'Положительные события не регистрируются как значимые. Возможна депрессивная дисрегуляция.'});
+
+  if(distortions.length===0){
+    return `<div class="res-section">
+      <div class="sec-title"><span class="dot dot-green"></span>КОГНИТИВНЫЕ ИСКАЖЕНИЯ</div>
+      <div class="sec-body"><div class="block-item ok"><h4>ВЫРАЖЕННЫХ ИСКАЖЕНИЙ НЕ ОБНАРУЖЕНО</h4><p>Ваш когнитивный стиль относительно адаптивен. Следите за усилением в периоды стресса.</p></div></div>
+    </div>`;
+  }
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-yellow"></span>КОГНИТИВНЫЕ ИСКАЖЕНИЯ — ОБНАРУЖЕНО: ${distortions.length}</div>
+    <div class="sec-body">
+      ${distortions.map(d=>`<div class="block-item ${d.sev}"><h4>${d.name}</h4><p>${d.desc}</p></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderDefenses(sc){
+  const mechs=[];
+  if(sc.DEF_REP>2) mechs.push({name:'Вытеснение',sev:'danger',desc:'Болезненные воспоминания и чувства активно удерживаются вне сознания. Это работает — до момента, когда ресурс подавления иссякает. Тело помнит всё.'});
+  if(sc.DEF_RAT>2) mechs.push({name:'Рационализация',sev:'warn',desc:'Вы объясняете свои решения и поступки логически обоснованными причинами, скрывая истинные мотивы — даже от себя.'});
+  if(sc.DEF_PROJ>2) mechs.push({name:'Проекция',sev:'danger',desc:'То, что вы не принимаете в себе, видите в других. «Все завистники» — возможно, вы сами завидуете. «Все манипуляторы» — смотрите внутрь.'});
+  if(sc.DEF_DISP>2) mechs.push({name:'Смещение',sev:'warn',desc:'Агрессия, вызванная одним источником, направляется на безопасную мишень. Вы срываетесь на близких вместо тех, кого боитесь или не можете достичь.'});
+  if(sc.DEF_PASS>2) mechs.push({name:'Пассивная агрессия',sev:'warn',desc:'Злость выражается косвенно: молчание, забывчивость, опоздания, сарказм. Вы отрицаете злость, но она очевидна окружающим.'});
+  if(sc.DEF_DEN>2) mechs.push({name:'Отрицание',sev:'danger',desc:'Вы не принимаете информацию, которая угрожает вашему образу себя или мира. Это защищает в краткосрочной перспективе и блокирует рост в долгосрочной.'});
+  if(sc.DEF_COMP>2) mechs.push({name:'Навязчивое повторение',sev:'danger',desc:'Вы воспроизводите одни и те же болезненные паттерны — в отношениях, работе, выборах. Бессознательная попытка «переписать» старую травму.'});
+  if(sc.DEF_SUBLI>1) mechs.push({name:'Сублимация',sev:'ok',desc:'Неприемлемые импульсы трансформируются в социально одобряемую деятельность. Это здоровый механизм — если не является единственным способом справляться.'});
+
+  if(mechs.length===0){
+    return `<div class="res-section">
+      <div class="sec-title"><span class="dot dot-green"></span>ЗАЩИТНЫЕ МЕХАНИЗМЫ</div>
+      <div class="sec-body"><div class="block-item ok"><h4>ЗРЕЛЫЕ ЗАЩИТЫ</h4><p>Доминируют зрелые защитные механизмы. Высокая психологическая гибкость.</p></div></div>
+    </div>`;
+  }
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-orange"></span>ЗАЩИТНЫЕ МЕХАНИЗМЫ — АКТИВНЫХ: ${mechs.length}</div>
+    <div class="sec-body">
+      <p>Защитные механизмы — не патология. Они возникли как адаптация. Проблема начинается тогда, когда они работают автоматически и мешают жить.</p>
+      ${mechs.map(m=>`<div class="block-item ${m.sev}"><h4>${m.name}</h4><p>${m.desc}</p></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderER(sc){
+  const ERp=Math.min(100,Math.round((sc.ER_HIGH/9)*100));
+  const ALp=Math.min(100,Math.round((sc.ALEXITH/3)*100));
+  const DISp=Math.min(100,Math.round((sc.DISSOC/3)*100));
+
+  let erText='';
+  if(ERp>65) erText='<div class="block-item danger"><h4>НИЗКАЯ ЭМОЦИОНАЛЬНАЯ РЕГУЛЯЦИЯ</h4><p>Эмоции захватывают вас и управляют поведением. Период восстановления после триггеров долгий. Высокий риск эмоционального выгорания, импульсивных решений, разрушительных конфликтов. Это не слабость характера — это нейробиологическая дисрегуляция, которая поддаётся работе.</p></div>';
+  else if(ERp>35) erText='<div class="block-item warn"><h4>УМЕРЕННАЯ РЕГУЛЯЦИЯ</h4><p>В спокойных условиях справляетесь. В стрессе — теряете устойчивость. Навыки регуляции нуждаются в укреплении.</p></div>';
+  else erText='<div class="block-item ok"><h4>ХОРОШАЯ РЕГУЛЯЦИЯ</h4><p>Вы удерживаете эмоциональный баланс даже под давлением. Редкое качество.</p></div>';
+
+  let alText='';
+  if(ALp>60) alText='<div class="block-item danger"><h4>АЛЕКСИТИМИЯ</h4><p>Вам трудно идентифицировать и описывать собственные эмоции. Это не значит, что вы их не чувствуете — вы чувствуете, но не «знаете» что именно. Алекситимия связана с психосоматическими расстройствами: тело говорит то, что разум не может назвать.</p></div>';
+  else if(ALp>30) alText='<div class="block-item warn"><h4>УМЕРЕННАЯ АЛЕКСИТИМИЯ</h4><p>Эмоциональный словарь ограничен. Иногда трудно понять, что именно вы чувствуете.</p></div>';
+  else alText='';
+
+  let disText='';
+  if(DISp>60) disText='<div class="block-item danger"><h4>ДИССОЦИАТИВНЫЕ СИМПТОМЫ</h4><p>Периодическое ощущение нереальности себя или мира — серьёзный симптом, часто связанный с травматическим опытом. Диссоциация — это аварийный выход психики. Если это происходит часто, необходима работа с травма-терапевтом.</p></div>';
+  else if(DISp>30) disText='<div class="block-item warn"><h4>ЛЁГКИЕ ДИССОЦИАТИВНЫЕ СОСТОЯНИЯ</h4><p>Изредка возникает ощущение «отключённости». Усиливается при стрессе и хроническом напряжении.</p></div>';
+
+  const copeText=sc.COPE_BAD>1?'<div class="block-item danger"><h4>ДИСФУНКЦИОНАЛЬНЫЕ КОПИНГ-СТРАТЕГИИ</h4><p>Ваши основные способы справляться со стрессом (еда, алкоголь, эскапизм, изоляция) дают краткосрочное облегчение, усиливая проблему в долгосрочной. Это не слабость — это выученная стратегия, которую можно заменить.</p></div>':
+    sc.COPE_MID>0?'<div class="block-item warn"><h4>СМЕШАННЫЕ СТРАТЕГИИ</h4><p>Часть стратегий адаптивна, часть — нет. Баланс важен.</p></div>':
+    '<div class="block-item ok"><h4>АДАПТИВНЫЙ КОПИНГ</h4><p>Вы используете здоровые способы справляться со стрессом.</p></div>';
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-yellow"></span>ЭМОЦИОНАЛЬНАЯ РЕГУЛЯЦИЯ</div>
+    <div class="sec-body">
+      ${erText}${alText}${disText}${copeText}
+    </div>
+  </div>`;
+}
+
+function renderTrauma(traumaTotal, sc){
+  let aceSev='';
+  if(sc.TR_ACE>4) aceSev='<div class="block-item danger"><h4>ВЫСОКИЙ ACE-ИНДЕКС</h4><p>Значительный неблагоприятный детский опыт. Исследования ACE Study показывают прямую корреляцию с хроническими заболеваниями, ментальными расстройствами, укорочением жизни. Это не приговор — но контекст, который объясняет многое в вашей психологии.</p></div>';
+  else if(sc.TR_ACE>2) aceSev='<div class="block-item warn"><h4>УМЕРЕННЫЙ ACE-ИНДЕКС</h4><p>Присутствует неблагоприятный детский опыт, влияющий на текущие паттерны.</p></div>';
+  else aceSev='<div class="block-item ok"><h4>НИЗКИЙ ACE-ИНДЕКС</h4><p>Детский опыт относительно благополучный. Не исключает других источников стресса.</p></div>';
+
+  let ptsdText='';
+  if(sc.TR_PTSD>4) ptsdText='<div class="block-item danger"><h4>ПТСР-ПАТТЕРНЫ</h4><p>Признаки посттравматической симптоматики: флэшбэки, гиперреактивность, избегание триггеров. Это не слабость — это нормальная реакция психики на ненормальные события. Без проработки симптомы не исчезают самостоятельно.</p></div>';
+  else if(sc.TR_PTSD>2) ptsdText='<div class="block-item warn"><h4>СУБКЛИНИЧЕСКИЕ ПТСР-ЧЕРТЫ</h4><p>Некоторые триггеры вызывают непропорциональные реакции. Вероятен непереработанный опыт.</p></div>';
+
+  let shameText='';
+  if(sc.TR_SHAME>5) shameText='<div class="block-item danger"><h4>ТОКСИЧНЫЙ СТЫД</h4><p>«Я плохой» — не как мысль, а как фундаментальное ощущение себя. В отличие от вины («я сделал что-то плохое»), стыд касается самой идентичности. Это глубинная травма, которая управляет отношениями, карьерой и самовосприятием. Формируется в раннем детстве через повторяющееся унижение, отвержение или невидимость.</p></div>';
+  else if(sc.TR_SHAME>3) shameText='<div class="block-item warn"><h4>ПОВЫШЕННЫЙ СТЫД</h4><p>Базовая самооценка нестабильна и зависит от внешней оценки. Синдром самозванца, перфекционизм и трудности с принятием комплиментов — его проявления.</p></div>';
+
+  let bodyText='';
+  if(sc.TR_BODY>3) bodyText='<div class="block-item danger"><h4>ОТЧУЖДЕНИЕ ОТ ТЕЛА</h4><p>Тело воспринимается как чужое, враждебное или незначимое. Часто — след физического или сексуального насилия, хронического стыда за внешность или тяжёлой болезни. Возможны психосоматические симптомы, пищевые расстройства, трудности с ощущением телесных сигналов.</p></div>';
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-red"></span>ТРАВМАТИЧЕСКИЙ ФОН</div>
+    <div class="sec-body">
+      ${aceSev}${ptsdText}${shameText}${bodyText}
+      ${traumaTotal===0?'<p style="color:var(--text2);font-size:13px">Признаков значимого травматического фона не обнаружено. Либо его нет, либо сработали защитные механизмы — особенно вытеснение.</p>':''}
+    </div>
+  </div>`;
+}
+
+function renderShadow(sc){
+  const shadows=[];
+  if(sc.NARC>3 && sc.SELFC>2) shadows.push('Грандиозность как защита от глубинного стыда. Нарциссизм и самоуничижение — две стороны одной раны.');
+  if(sc.AVD>4 && sc.ANX>2) shadows.push('Избегание как ответ на тревогу привязанности. Вы хотите близости, но защищаетесь от неё дистанцированием.');
+  if(sc.MACH>3 && sc.EMP<0) shadows.push('Манипулятивность как компенсация ощущения беспомощности или ранней беззащитности.');
+  if(sc.CAT>3 && sc.TR_ACE>2) shadows.push('Катастрофизация укоренена в детском опыте непредсказуемости. Мозг научился ждать худшего, чтобы не быть застигнутым врасплох.');
+  if(sc.DEF_REP>2 && sc.TR_PTSD>2) shadows.push('Вытеснение удерживает травматический материал вне сознания. Тело при этом продолжает реагировать — симптомами, болями, хроническим напряжением.');
+  if(sc.C<-1 && sc.TR_SHAME>3) shadows.push('Прокрастинация и дезорганизация как следствие токсичного стыда: «зачем начинать, если я всё равно провалюсь».');
+
+  if(shadows.length===0) return '';
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-red"></span>ТЕНЕВЫЕ ПАТТЕРНЫ — СВЯЗИ МЕЖДУ БЛОКАМИ</div>
+    <div class="sec-body">
+      <p>Следующие паттерны выявлены на основе перекрёстного анализа ваших ответов:</p>
+      ${shadows.map(s=>`<div class="block-item danger"><p>${s}</p></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderRecs(sc, attach, darkLevel, trauma){
+  const recs=[];
+
+  if(sc.N>2) recs.push({priority:'ВЫСОКИЙ',text:'Работа с тревожностью: КПТ, MBSR, или медикаментозная поддержка при необходимости. Нейротизм — не черта характера навсегда.'});
+  if(attach==='FAR' || attach==='ANX') recs.push({priority:'ВЫСОКИЙ',text:'Травма-фокусированная терапия или EMDR для работы со стилем привязанности. Это требует времени, но даёт принципиальное изменение качества отношений.'});
+  if(trauma>6) recs.push({priority:'КРИТИЧЕСКИЙ',text:'Работа с травматическим опытом обязательна. Без переработки ПТСР-паттерны усиливаются с возрастом и передаются детям. Ищите специалиста по травма-терапии.'});
+  if(sc.TR_SHAME>4) recs.push({priority:'ВЫСОКИЙ',text:'Работа со стыдом — центральная задача. CFT (терапия, ориентированная на сострадание) или схема-терапия. Токсичный стыд не исчезает сам и не «побеждается» усилием воли.'});
+  if(sc.ALEXITH>1) recs.push({priority:'СРЕДНИЙ',text:'Развитие эмоционального интеллекта: ведение дневника чувств, работа с телесными ощущениями, возможно — арт-терапия или телесная терапия.'});
+  if(sc.DISSOC>1) recs.push({priority:'ВЫСОКИЙ',text:'Диссоциативные симптомы требуют профессиональной оценки. Особенно если они участились или усилились.'});
+  if(darkLevel>10) recs.push({priority:'ВЫСОКИЙ',text:'Высокий балл по Тёмной триаде коррелирует с разрушением отношений и социальной изоляцией в долгосрочной перспективе. Не как наказание — как механический результат. Стоит исследовать, что стоит за этими чертами.'});
+  if(sc.COPE_BAD>1) recs.push({priority:'СРЕДНИЙ',text:'Замена дисфункциональных копинг-стратегий: конкретный план с заменой триггер → реакция. DBT-навыки дистресс-толерантности работают хорошо.'});
+  if(sc.C<-1) recs.push({priority:'СРЕДНИЙ',text:'Проблемы с самоорганизацией. Рассмотрите оценку СДВГ — у взрослых он часто не диагностирован. Поведенческие инструменты (внешние структуры, дробление задач) помогают независимо от диагноза.'});
+
+  if(recs.length===0) recs.push({priority:'НИЗКИЙ',text:'Явных критических зон не обнаружено. Поддерживайте текущий уровень психологической осознанности. Профилактическая терапия (даже без симптомов) — ценная инвестиция.'});
+
+  return `
+  <div class="res-section">
+    <div class="sec-title"><span class="dot dot-blue"></span>РЕКОМЕНДАЦИИ — БЕЗ СМЯГЧЕНИЙ</div>
+    <div class="sec-body">
+      ${recs.map(r=>`
+        <div class="block-item ${r.priority==='КРИТИЧЕСКИЙ'?'danger':r.priority==='ВЫСОКИЙ'?'danger':'warn'}">
+          <h4>ПРИОРИТЕТ: ${r.priority}</h4><p>${r.text}</p>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// HELPERS
+function bar(name,pct,color){
+  return `<div class="bar-row">
+    <div class="bar-name">${name}</div>
+    <div class="bar-track"><div class="bar-fill" data-w="${pct}" style="width:0%;background:${color}"></div></div>
+    <div class="bar-val" style="color:${color}">${pct}%</div>
+  </div>`;
+}
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+
+// INIT
+renderQ();
+</script>
+</body>
+</html>
